@@ -30,7 +30,7 @@ passport.use(
       clientSecret: keys.googleClientSecret,
       callbackURL: "/auth/google/callback"
     },
-    (accessToken, refreToken, profile, done) => {
+    (accessToken, refreshToken, profile, done) => {
       User.findOne({ googleId: profile.id }).then(existingUser => {
         if (existingUser) {
           console.log(1);
@@ -38,8 +38,7 @@ passport.use(
         } else {
           new User({ googleId: profile.id })
             .save()
-            .then(user =>
-               done(null, user));
+            .then(user => done(null, user));
         }
       });
     }
