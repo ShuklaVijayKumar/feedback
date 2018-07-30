@@ -6,14 +6,21 @@ const keys = require("../config/keys");
 const User = mongoose.model("users");
 
 passport.serializeUser((user, done) => {
-  console.log("Userrrr", user);
-  done(null, user.id);
+  try {
+    done(null, user.id);
+  } catch (exception) {
+    console.log(exception);
+  }
 });
+
 passport.deserializeUser((id, done) => {
-  User.findById({ id: id }).then(user => {
-    console.log("Userrrr", user);
-    done(null, user);
-  });
+  try {
+    User.findById({ id }).then(user => {
+      done(null, user);
+    });
+  } catch (exception) {
+    console.log(exception);
+  }
 });
 
 passport.use(
@@ -26,12 +33,13 @@ passport.use(
     (accessToken, refreToken, profile, done) => {
       User.findOne({ googleId: profile.id }).then(existingUser => {
         if (existingUser) {
-          console.log("I'm here");
+          console.log(1);
           done(null, existingUser);
         } else {
           new User({ googleId: profile.id })
             .save()
-            .then(user => done(null, user));
+            .then(user =>
+               done(null, user));
         }
       });
     }
