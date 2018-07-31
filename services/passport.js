@@ -15,7 +15,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
   try {
-    User.findById({ id }).then(user => {
+    User.findById(id).then(user => {
       done(null, user);
     });
   } catch (exception) {
@@ -32,8 +32,7 @@ passport.use(
     },
     (accessToken, refreshToken, profile, done) => {
       User.findOne({ googleId: profile.id }).then(existingUser => {
-        if (existingUser) {
-          console.log(1);
+        if (existingUser) { 
           done(null, existingUser);
         } else {
           new User({ googleId: profile.id })
